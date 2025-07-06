@@ -70,3 +70,7 @@ docker compose exec app php artisan migrate
 ```bash
 make test
 ```
+
+### 8. Open in Browser
+This is the default URL exposed by the Docker setup.
+Visit: [http://localhost:816/](http://localhost:816/)
