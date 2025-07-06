@@ -34,15 +34,26 @@ if [ "$CONTAINER_ROLE" = "app" ]; then
     fi
 
     count=0
-    while [ ! -f vendor/autoload.php ]; do
-      echo "Waiting for composer to finish..."
+    max_retries=30
+
+    echo "Checking if Laravel is ready..."
+
+    while ! php artisan --version > /dev/null 2>&1; do
+      echo "Waiting for Laravel to be ready..."
       sleep 1
       count=$((count + 1))
-      if [ $count -gt 30 ]; then
-        echo "Composer install did not finish in time. Aborting."
+
+      if [ $count -ge $max_retries ]; then
+        echo "Timeout reached. Laravel is not ready. Aborting."
         exit 1
       fi
     done
+
+    echo "Laravel is ready!"
+
+    # Run migrations
+    echo "Running migrations..."
+    php artisan migrate --force
 
     # Gen APP_KEY if not exists
     if ! grep -q "^APP_KEY=base64" .env 2>/dev/null; then
