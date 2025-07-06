@@ -8,8 +8,10 @@ echo "Container role: $CONTAINER_ROLE"
 if [ "$CONTAINER_ROLE" = "app" ]; then
 
     if [ ! -f .env ]; then
-      echo "No .env found. Copying .env.example..."
-      cp .env.example .env
+        echo "No .env found. Copying .env.example..."
+        # cp .env.example .env    # можеш розкоментувати, якщо хочеш автоматично копіювати
+        echo "Please create a .env file before continuing."
+        exit 1
     fi
 
     # install dependencies

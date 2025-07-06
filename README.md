@@ -30,7 +30,17 @@ Clone the repository into your local project folder:
 git clone https://github.com/YZinych/lucky-link.git .
 ```
 
-### 2. Build Docker Images
+### 2. Copy .env settings
+
+You can use the default configuration for quick local setup:
+
+```bash
+cp .env.example .env
+```
+
+> Make sure to do this **before** building Docker images — `.env` is required during the build process.
+
+### 3. Build Docker Images
 
 ```bash
 docker-compose build --no-cache
@@ -43,11 +53,10 @@ make dev-b
 During this step, Docker builds the app container and automatically:
 
 - Installs PHP dependencies
-- Copies `.env.example` to `.env` (if missing)
 - Generates a new `APP_KEY`
 - Caches config and routes
 
-### 3. Start the Services
+### 4. Start the Services
 
 When you start all containers, **all necessary services** are launched automatically, including the **Queue Worker** and **Scheduler**.
 
@@ -63,7 +72,7 @@ Or use the Makefile shortcut:
 make dev
 ```
 
-### 4. Run Database Migrations
+### 5. Run Database Migrations
 
 Create all necessary database tables:
 
@@ -77,7 +86,7 @@ Or use the Makefile shortcut:
 make migrate
 ```
 
-### 5. Run Unit Tests (optional)
+### 6. Run Unit Tests (optional)
 
 To run unit tests, use the following command inside the `app` container:
 
