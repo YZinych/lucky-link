@@ -5,11 +5,24 @@ set -e
 echo "===> Entrypoint is running..."
 echo "Container role: $CONTAINER_ROLE"
 
+# Ensure bootstrap/cache exists
+if [ ! -d "bootstrap/cache" ]; then
+    echo "Creating bootstrap/cache directory..."
+    mkdir -p bootstrap/cache
+fi
+
+chmod -R 775 bootstrap/cache
+chown -R www-data:www-data bootstrap/cache
+
 if [ "$CONTAINER_ROLE" = "app" ]; then
+
+    echo "Creating Laravel storage directories..."
+    mkdir -p storage/framework/{cache/data,sessions,views}
+    chown -R www-data:www-data storage
+    chmod -R 775 storage
 
     if [ ! -f .env ]; then
         echo "No .env found. Copying .env.example..."
-        # cp .env.example .env    # можеш розкоментувати, якщо хочеш автоматично копіювати
         echo "Please create a .env file before continuing."
         exit 1
     fi

@@ -38,6 +38,5 @@ schedule-log:
 test:
 	docker exec -it $(APP) php artisan config:clear && \
 	docker exec -it $(APP) php artisan cache:clear && \
-	docker exec -it $(APP) php artisan view:clear
 	docker compose exec app php artisan test
 	#docker compose exec app vendor/bin/phpunit

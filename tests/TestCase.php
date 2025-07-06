@@ -15,8 +15,5 @@ abstract class TestCase extends BaseTestCase
             echo "ABORT: Not in testing environment!\n";
             exit(1);
         }
-
-        Artisan::call('config:clear');
-        Artisan::call('cache:clear');
     }
 }
