@@ -50,10 +50,6 @@ if [ "$CONTAINER_ROLE" = "app" ]; then
         php artisan key:generate
     fi
 
-    # caching config and routes
-    php artisan config:cache
-    php artisan route:cache
-
     exec php-fpm
 
 elif [ "$CONTAINER_ROLE" = "queue" ]; then
