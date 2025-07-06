@@ -26,8 +26,18 @@ cache-clear:
 	docker exec -it $(APP) php artisan cache:clear && \
 	docker exec -it $(APP) php artisan view:clear
 
+migrate:
+	docker compose exec app php artisan migrate
+
 queue-log:
 	docker compose logs -f $(QUEUE_CONTAINER)
 
 schedule-log:
 	docker compose logs -f $(SCHEDULER_CONTAINER)
+
+test:
+	docker exec -it $(APP) php artisan config:clear && \
+	docker exec -it $(APP) php artisan cache:clear && \
+	docker exec -it $(APP) php artisan view:clear
+	docker compose exec app php artisan test
+	#docker compose exec app vendor/bin/phpunit

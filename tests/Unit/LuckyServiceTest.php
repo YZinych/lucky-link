@@ -112,15 +112,16 @@ class LuckyServiceTest extends TestCase
     /** Tests if Cache::remember is called with correct arguments */
     public function test_get_by_token_caches_result(): void
     {
-        $link = LuckyLink::factory()->create(['token' => 'abc-123']);
+        $token = fake()->uuid;
+        $link = LuckyLink::factory()->create(['token' => $token]);
 
         Cache::shouldReceive('remember')
             ->once()
-            ->with("lucky_link_abc-123", \Mockery::any(), \Closure::class)
+            ->with("lucky_link_" . $token, \Mockery::any(), \Closure::class)
             ->andReturn($link);
 
         $service = new LuckyService();
-        $result = $service->getByToken('abc-123');
+        $result = $service->getByToken($token);
 
         $this->assertEquals($link->id, $result->id);
     }
@@ -130,21 +131,22 @@ class LuckyServiceTest extends TestCase
     {
         config(['cache.default' => 'array']);
 
-        $link = LuckyLink::factory()->create(['token' => 'abc-123']);
+        $token = fake()->uuid;
+        $link = LuckyLink::factory()->create(['token' => $token]);
 
         $service = new LuckyService();
 
         // get and write cache
-        $result1 = $service->getByToken('abc-123');
+        $result1 = $service->getByToken($token);
 
         // get from cache
-        $result2 = $service->getByToken('abc-123');
+        $result2 = $service->getByToken($token);
 
         $this->assertEquals($link->id, $result1->id);
         $this->assertEquals($link->id, $result2->id);
 
         // check key
-        $this->assertTrue(Cache::has('lucky_link_abc-123'));
+        $this->assertTrue(Cache::has('lucky_link_' . $token));
     }
 
     /** For testing private methods */
