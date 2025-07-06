@@ -45,10 +45,6 @@ cp .env.example .env
 ```bash
 docker-compose build --no-cache
 ```
-Or use the Makefile shortcut:
-```bash
-make dev-b
-```
 
 During this step, Docker builds the app container and automatically:
 
