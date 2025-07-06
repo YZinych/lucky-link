@@ -1,0 +1,105 @@
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - .:/var/www/
+      - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - ${FORWARD_APP_PORT}:80
+    container_name: lucky_nginx
+    depends_on:
+      - app
+    networks:
+        - lucky-network
+
+  app:
+    build:
+        context: .
+        dockerfile: _docker/app/Dockerfile
+    volumes:
+      - .:/var/www/
+      - ./_docker/app/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./_docker/app/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+    container_name: lucky_app
+    environment:
+         PHP_IDE_CONFIG: "serverName=luckyServer"
+         HOME: /var/www
+         CONTAINER_ROLE: app
+    depends_on:
+      - db
+    networks:
+        - lucky-network
+
+  scheduler:
+    build:
+        context: .
+        dockerfile: _docker/app/Dockerfile
+    container_name: lucky_scheduler
+    volumes:
+        - .:/var/www/
+    environment:
+        CONTAINER_ROLE: scheduler
+    depends_on:
+        - app
+        - db
+        - redis
+    networks:
+        - lucky-network
+    restart: unless-stopped
+    logging:
+        driver: json-file
+        options:
+            max-size: '10m'
+            max-file: '3'
+
+  queue:
+    build:
+        context: .
+        dockerfile: _docker/app/Dockerfile
+    container_name: lucky_queue
+    volumes:
+        - .:/var/www/
+    environment:
+        CONTAINER_ROLE: queue
+    depends_on:
+        - app
+        - redis
+        - db
+    networks:
+        - lucky-network
+    restart: unless-stopped
+    logging:
+        driver: json-file
+        options:
+            max-size: '10m'
+            max-file: '3'
+
+  db:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - ./_docker/mysql/data/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+
+    ports:
+      - '${FORWARD_DB_PORT}:3306'
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    container_name: lucky_db
+    networks:
+        - lucky-network
+
+  redis:
+      image: redis:alpine
+      container_name: lucky_redis
+      ports:
+          - "${FORWARD_REDIS_PORT}:6379"
+      networks:
+          - lucky-network
+
+networks:
+    lucky-network:
+        driver: bridge
