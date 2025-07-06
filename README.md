@@ -59,13 +59,13 @@ Start in detached mode:
 docker-compose up -d
 ```
 
-### 4. Run Database Migrations
+### 6. Run Database Migrations
 
 ```bash
 docker compose exec app php artisan migrate
 ```
 
-### 5. Run Unit Tests (optional)
+### 7. Run Unit Tests (optional)
 
 ```bash
 make test
