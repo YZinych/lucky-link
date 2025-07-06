@@ -7,6 +7,11 @@ echo "Container role: $CONTAINER_ROLE"
 
 if [ "$CONTAINER_ROLE" = "app" ]; then
 
+    if [ ! -f .env ]; then
+      echo "No .env found. Copying .env.example..."
+      cp .env.example .env
+    fi
+
     # install dependencies
     if [ ! -d "vendor" ]; then
         echo "Running composer install..."
