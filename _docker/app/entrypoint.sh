@@ -34,12 +34,12 @@ if [ "$CONTAINER_ROLE" = "app" ]; then
     fi
 
     count=0
-    while ! php artisan --version > /dev/null 2>&1; do
-      echo "Waiting for Laravel to be ready..."
-      sleep 2
+    while [ ! -f vendor/autoload.php ]; do
+      echo "Waiting for composer to finish..."
+      sleep 1
       count=$((count + 1))
       if [ $count -gt 30 ]; then
-        echo "Laravel did not become ready in time. Aborting."
+        echo "Composer install did not finish in time. Aborting."
         exit 1
       fi
     done
