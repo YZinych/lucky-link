@@ -33,6 +33,17 @@ if [ "$CONTAINER_ROLE" = "app" ]; then
         composer install --no-interaction --prefer-dist --optimize-autoloader
     fi
 
+    count=0
+    while ! php artisan --version > /dev/null 2>&1; do
+      echo "Waiting for Laravel to be ready..."
+      sleep 2
+      count=$((count + 1))
+      if [ $count -gt 30 ]; then
+        echo "Laravel did not become ready in time. Aborting."
+        exit 1
+      fi
+    done
+
     # Gen APP_KEY if not exists
     if ! grep -q "^APP_KEY=base64" .env 2>/dev/null; then
         echo "Generating APP_KEY..."
