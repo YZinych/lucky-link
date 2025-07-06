@@ -27,34 +27,6 @@ if [ "$CONTAINER_ROLE" = "app" ]; then
         exit 1
     fi
 
-    # install dependencies
-    if [ ! -d "vendor" ]; then
-        echo "Running composer install..."
-        composer install --no-interaction --prefer-dist --optimize-autoloader
-    fi
-
-    count=0
-    max_retries=30
-
-    echo "Checking if Laravel is ready..."
-
-    while ! php artisan --version > /dev/null 2>&1; do
-      echo "Waiting for Laravel to be ready..."
-      sleep 1
-      count=$((count + 1))
-
-      if [ $count -ge $max_retries ]; then
-        echo "Timeout reached. Laravel is not ready. Aborting."
-        exit 1
-      fi
-    done
-
-    echo "Laravel is ready!"
-
-    # Run migrations
-    echo "Running migrations..."
-    php artisan migrate --force
-
     # Gen APP_KEY if not exists
     if ! grep -q "^APP_KEY=base64" .env 2>/dev/null; then
         echo "Generating APP_KEY..."

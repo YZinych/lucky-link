@@ -24,13 +24,17 @@ Expired links are automatically deactivated, and users can view the history of t
 
 ### 1. Clone the Repository
 
-Clone the repository into your local project folder:
-
 ```bash
 git clone https://github.com/YZinych/lucky-link.git .
 ```
 
-### 2. Copy .env settings
+### 2. Install PHP Dependencies
+
+```bash
+composer install
+```
+
+### 3. Copy .env settings
 
 You can use the default configuration for quick local setup:
 
@@ -40,51 +44,28 @@ cp .env.example .env
 
 > Make sure to do this **before** building Docker images — `.env` is required during the build process.
 
-### 3. Build Docker Images
+### 4. Build Docker Images
 
 ```bash
 docker-compose build --no-cache
 ```
 
-During this step, Docker builds the app container and automatically:
-
-- Installs PHP dependencies
-- Generates a new `APP_KEY`
-- Caches config and routes
-
-### 4. Start the Services
+### 5. Start the Services
 
 When you start all containers, **all necessary services** are launched automatically, including the **Queue Worker** and **Scheduler**.
-
 Start in detached mode:
 
 ```bash
 docker-compose up -d
 ```
 
-Or use the Makefile shortcut:
-
-```bash
-make dev
-```
-
-### 5. Run Database Migrations
-
-Create all necessary database tables:
+### 4. Run Database Migrations
 
 ```bash
 docker compose exec app php artisan migrate
 ```
 
-Or use the Makefile shortcut:
-
-```bash
-make migrate
-```
-
-### 6. Run Unit Tests (optional)
-
-To run unit tests, use the following command inside the `app` container:
+### 5. Run Unit Tests (optional)
 
 ```bash
 make test
