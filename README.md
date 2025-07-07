@@ -14,7 +14,7 @@ Expired links are automatically deactivated, and users can view the history of t
 - Queued jobs and scheduled tasks
 - Redis caching and queue management
 - Unit Tests
-- Tech Stack: Laravel 11 + PHP 8.3 + Docker + Nginx + MySQL
+- Tech Stack: Laravel 11 + PHP 8.3 + Docker + Nginx + MySQL + Redis
 - Docker-ready - easy setup with Docker Compose
 
 ## Requirements
