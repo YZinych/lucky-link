@@ -5,6 +5,8 @@ Players receive a random number and can win a prize based on configurable win ru
 Each link expires after a set time, but users can regenerate a new one if needed.
 Expired links are automatically deactivated, and users can view the history of their recent attempts.
 
+<a href="https://lucky-link-app.travels-zone.com" target="_blank" style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Live Demo</a>
+
 ## Features
 
 - Token-based game system with expiry
